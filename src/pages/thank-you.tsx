@@ -9,7 +9,7 @@ const ThankYou = () => {
 
     const hasSuccess = router.query.success === "true";
 
-    // 🚫 Direct access block (optional)
+    // 🚫 Direct access block
     if (!hasSuccess) {
       setTimeout(() => {
         router.replace("/");
@@ -19,13 +19,19 @@ const ThankYou = () => {
 
     // ✅ Google Ads conversion fire
     if (typeof window !== "undefined" && (window as any).gtag) {
+      // Pehle ensure karein ki Google Ads tag loaded hai
       (window as any).gtag("event", "conversion", {
         send_to: "AW-17818948467/R9m_COmC--YbEPOm3rBC",
         value: 40.0,
         currency: "INR",
+        transaction_id: `LEAD_${Date.now()}`, // Har conversion unique ho
       });
+      
+      console.log("✅ Google Ads conversion fired");
+    } else {
+      console.warn("❌ gtag not loaded yet");
     }
-  }, [router.isReady]);
+  }, [router.isReady, router.query.success]); 
 
   return (
     <div style={{ padding: "80px 20px", textAlign: "center" }}>
